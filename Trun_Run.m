@@ -83,8 +83,10 @@ for i = 1:length(data_GA1.AN)
     y = [y; data_GA1.reorient_deg_abs{i,1}];
 end
 
-Headings = -180:5:180;
-plot_head = -177.5:5:177.5;
+%Headings = -180:5:180;
+%plot_head = -177.5:5:177.5;
+Headings = -180:10:180;
+plot_head = -175:10:175;
 head_change = zeros(length(Headings)-1,1);
 head_change_sem = zeros(length(Headings)-1,1);
 
@@ -102,3 +104,35 @@ end
 
 mat3 = [plot_head' head_change head_change_sem];
 writematrix(mat3, 'head_change.csv')
+
+%% Head Change Range
+
+x = []; % vector to contain pre heading
+y = []; % vector to contain post heading
+post_degree1 = []; % initial head direction [-45, 45]
+post_degree2 = []; % initial head direction [45, 135]
+post_degree3 = []; % initial head direction [-135, -45]
+post_degree4 = []; % initial head direction [-135, 135]
+
+for i = 1:length(data_GA1.AN)
+    x = [x; data_GA1.pre_deg{i, 1}];
+    y = [y; data_GA1.post_deg{i, 1}];
+end
+
+for j = 1:length(data_GA1.AN)
+    if x(j) > -45 && x(j) < 45
+        post_degree1 = [post_degree1, y(j)];
+    elseif x(j) >= 45 && x(j) < 135 
+        post_degree2 = [post_degree2, y(j)];
+    elseif x(j) >= -135 && x(j) < -45 
+        post_degree3 = [post_degree3, y(j)];
+    else
+        post_degree4 = [post_degree4, y(j)];
+    end
+end
+
+
+writematrix(post_degree1, 'post_degree1.csv')
+writematrix(post_degree2, 'post_degree2.csv')
+writematrix(post_degree3, 'post_degree3.csv')
+writematrix(post_degree4, 'post_degree4.csv')
